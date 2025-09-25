@@ -56,9 +56,15 @@ public final class Runner {
 		html = stripBomAndDoctype(html);
 		org.w3c.dom.Document w3c = toW3c(html);
 		
+		// PdfRenderBuilder initialisieren und aufrufen -> W3C Document zur pdf machen (Schriftarten werden eingebettet)
 		var b = new com.openhtmltopdf.pdfboxout.PdfRendererBuilder();
 		b.useFastMode();
-		b.withW3cDocument(w3c, null);                // statt withHtmlContent(...)
+		b.withW3cDocument(w3c, null);
+        b.useFont(new java.io.File("C:/Windows/Fonts/arial.ttf"), "Arial");
+        b.useFont(new java.io.File("C:/Windows/Fonts/arialbd.ttf"), "Arial");
+        b.useFont(new java.io.File("C:/Windows/Fonts/ariali.ttf"), "Arial");
+        b.useFont(new java.io.File("C:/Windows/Fonts/arialbi.ttf"), "Arial");
+        b.useFont(new java.io.File("C:/Windows/Fonts/ariblk.ttf"), "Arial");
 		b.toStream(java.nio.file.Files.newOutputStream(ouPdf));
 		b.run();
 		
@@ -78,7 +84,7 @@ public final class Runner {
 	    for (org.jsoup.nodes.Element p : doc.select("p[style]")) {
 	        String s = p.attr("style");
 	        if (p.text().isBlank() && s.matches("(?i).*height\\s*:\\s*\\d+(\\.\\d+)?(em|px).*")) {
-	            p.after("<div style=\"margin:0.6em 0\"></div>");
+	            p.after("<div style=\"margin:0.01em 0\"></div>");
 	            p.remove();
 	        }
 	    }
